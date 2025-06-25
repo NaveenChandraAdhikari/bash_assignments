@@ -88,9 +88,9 @@ add() {
     echo $(($1 + $2))
 }
 
-# Auto-addition before asking user operation
+# addition
 auto_sum=$(add $1 $2)
-echo "Addition Result (auto): $auto_sum"
+echo "Addition Result : $auto_sum"
 
 # ----------------------------------------
 # : Define other arithmetic functions
