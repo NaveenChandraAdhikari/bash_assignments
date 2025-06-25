@@ -57,7 +57,7 @@ is_integer() {
             echo "ERROR: Empty input." | tee -a error.log
             exit 1
         fi
-        # check if digits only (basic method)
+        # check if digits only here i have neglected the sign only 
         if [ "${input:0:1}" = "-" ]; then
             input="${input:1}"
         fi
@@ -149,3 +149,12 @@ echo "Input Numbers : $1 and $2"
 echo "Operation     : $operation"
 echo "Result        : $result"
 echo "======================================="
+
+
+
+
+OUPUTS 
+
+
+
+
