@@ -1,0 +1,155 @@
+#!/bin/bash
+
+# ----------------------------------------
+#  Show Help with -h
+# ----------------------------------------
+show_help() {
+    cat << EOF
+=======================================
+          Calculator Script Help 
+=======================================
+Usage: $0 [num1] [num2]
+Calculator for 2 integers
+
+Options:
+  -h     help message
+
+Supported Operations:
+  +     Addition
+  -     Subtraction
+  *     Multiplication
+  /     Division
+
+Example:
+  $0 5 3
+=======================================
+EOF
+    exit 0
+}
+
+if [[ "$1" == "-h" ]]; then
+    show_help
+fi
+
+# ----------------------------------------
+#  Print the arguments
+# ----------------------------------------
+echo "First Argument: $1"
+echo "Second Argument: $2"
+
+# ----------------------------------------
+# : Check the number of arguments
+# ----------------------------------------
+if [ $# -gt 2 ]; then
+    echo "ERROR: Too many arguments provided ($# arguments)."
+    exit 1
+elif [ $# -ne 2 ]; then
+    echo "ERROR: Please provide exactly two numbers."
+    exit 1
+fi
+
+# ----------------------------------------
+# : Check if inputs are integers
+# ----------------------------------------
+is_integer() {
+    input="$1"
+
+    if [ -z "$input" ]; then
+        echo "ERROR: Input is empty." | tee -a error.log
+        exit 1
+    fi
+
+    # Allow negative numbers
+    if [ "${input:0:1}" = "-" ]; then
+        input="${input:1}"
+    fi
+
+    for (( i=0; i<${#input}; i++ )); do
+        char="${input:$i:1}"
+        is_digit=false
+        for digit in {0..9}; do
+            if [ "$char" = "$digit" ]; then
+                is_digit=true
+                break
+            fi
+        done
+
+        if [ "$is_digit" = false ]; then
+            echo "ERROR: '$1' is not a valid integer." | tee -a error.log
+            exit 1
+        fi
+    done
+}
+
+# Validate inputs
+is_integer "$1"
+is_integer "$2"
+
+# ----------------------------------------
+# : Perform Addition using function
+# ----------------------------------------
+add() {
+    echo $(($1 + $2))
+}
+
+# Auto-addition before asking user operation
+auto_sum=$(add $1 $2)
+echo "Addition Result (auto): $auto_sum"
+
+# ----------------------------------------
+# : Define other arithmetic functions
+# ----------------------------------------
+subtract() {
+    echo $(($1 - $2))
+}
+
+multiply() {
+    echo $(($1 * $2))
+}
+
+divide() {
+    if [ $2 -eq 0 ]; then
+        echo "ERROR: Division by zero is not allowed." | tee -a error.log
+        exit 1
+    fi
+    echo $(($1 / $2))
+}
+
+# ----------------------------------------
+# : Ask for operation and process
+# ----------------------------------------
+while true; do
+    echo "Enter operation (+, -, *, /):"
+    read operation
+
+    case $operation in
+        "+")
+            result=$(add $1 $2)
+            break
+            ;;
+        "-")
+            result=$(subtract $1 $2)
+            break
+            ;;
+        "*")
+            result=$(multiply $1 $2)
+            break
+            ;;
+        "/")
+            result=$(divide $1 $2)
+            break
+            ;;
+        *)
+            echo "ERROR: Invalid operation. Please enter +, -, *, or /."
+            ;;
+    esac
+done
+
+# ----------------------------------------
+# : Final Output
+# ----------------------------------------
+echo "======================================="
+echo "Input Numbers : $1 and $2"
+echo "Operation     : $operation"
+echo "Result        : $result"
+echo "======================================="
