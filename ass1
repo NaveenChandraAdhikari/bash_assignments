@@ -80,7 +80,7 @@ is_integer() {
 
 #arguments call
 is_integer "$1" "$2"
-
+# ALTERNATIVELY WE CAN ALSO CHECK INTEGER BY REGEX OPERATIONS , tross error to /dev/null
 # ----------------------------------------
 # : Perform Addition using function
 # ----------------------------------------
